@@ -91,10 +91,10 @@
             <label for="committee-select" class="form-label mb-2" style="font-weight: bold; color: var(--coop-green);">請選擇委員會並點擊確認：</label>
             <div class="input-group">
                 <select id="committee-select" class="form-select form-select-lg">
-                    <option value="editor">🍀 編輯委員會</option>
-                    <option value="education">🎓 教育委員會</option>
-                    <option value="welfare">❤️ 福祉委員會</option>
                     <option value="goods">🛒 生活材委員會</option>
+                    <option value="education">🎓 教育委員會</option>
+                    <option value="editor">🍀 編輯委員會</option>
+                    <option value="welfare">❤️ 福祉委員會</option>
                 </select>
                 <button class="btn btn-confirm" type="button" id="confirm-btn" onclick="confirmCommittee()">確認</button>
             </div>
@@ -129,12 +129,12 @@
     </div>
 
     <script>
-        // --- 設定區：請分別填入各分頁「發布到網路」後的獨立 CSV 網址 ---
+        // --- 設定區：CSV 網址對接 ---
         const csvUrls = {
-            'editor':    'https://docs.google.com/spreadsheets/d/e/2PACX-1vRjEF6OeIFMUxmbtdQDyJ9Mn-pdPqAgH_MlbFo6mR_qX-jz3Zs0Fmywbnfr0USK0L_YyU7h-k5PxlsX/pub?gid=0&single=true&output=csv', 
+            'goods':     'https://docs.google.com/spreadsheets/d/e/2PACX-1vRjEF6OeIFMUxmbtdQDyJ9Mn-pdPqAgH_MlbFo6mR_qX-jz3Zs0Fmywbnfr0USK0L_YyU7h-k5PxlsX/pub?gid=1946325910&single=true&output=csv',
             'education': 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRjEF6OeIFMUxmbtdQDyJ9Mn-pdPqAgH_MlbFo6mR_qX-jz3Zs0Fmywbnfr0USK0L_YyU7h-k5PxlsX/pub?gid=1218334275&single=true&output=csv',
-            'welfare':   'https://docs.google.com/spreadsheets/d/e/2PACX-1vRjEF6OeIFMUxmbtdQDyJ9Mn-pdPqAgH_MlbFo6mR_qX-jz3Zs0Fmywbnfr0USK0L_YyU7h-k5PxlsX/pub?gid=1888287492&single=true&output=csv',
-            'goods':     'https://docs.google.com/spreadsheets/d/e/2PACX-1vRjEF6OeIFMUxmbtdQDyJ9Mn-pdPqAgH_MlbFo6mR_qX-jz3Zs0Fmywbnfr0USK0L_YyU7h-k5PxlsX/pub?gid=1946325910&single=true&output=csv'
+            'editor':    'https://docs.google.com/spreadsheets/d/e/2PACX-1vRjEF6OeIFMUxmbtdQDyJ9Mn-pdPqAgH_MlbFo6mR_qX-jz3Zs0Fmywbnfr0USK0L_YyU7h-k5PxlsX/pub?gid=0&single=true&output=csv', 
+            'welfare':   'https://docs.google.com/spreadsheets/d/e/2PACX-1vRjEF6OeIFMUxmbtdQDyJ9Mn-pdPqAgH_MlbFo6mR_qX-jz3Zs0Fmywbnfr0USK0L_YyU7h-k5PxlsX/pub?gid=1888287492&single=true&output=csv'
         };
 
         window.onload = function() {
@@ -145,22 +145,18 @@
             updateLinks();
         };
 
-        // 按下確認按鈕時執行
         async function confirmCommittee() {
             const confirmBtn = document.getElementById('confirm-btn');
             const selected = document.getElementById('committee-select').value;
             
-            // 儲存選擇
             localStorage.setItem('hcgn_selected_committee', selected);
             
-            // 視覺特效：改變按鈕文字與狀態
             confirmBtn.disabled = true;
             confirmBtn.innerText = "更新中...";
             document.querySelectorAll('.btn-custom').forEach(btn => btn.style.opacity = '0.5');
 
             await updateLinks();
 
-            // 完成特效
             confirmBtn.innerText = "已更新 ✅";
             document.querySelectorAll('.btn-custom').forEach(btn => btn.style.opacity = '1');
             
@@ -174,7 +170,7 @@
             const committee = document.getElementById('committee-select').value;
             const url = csvUrls[committee];
             
-            if (!url || url.includes('請填入')) {
+            if (!url) {
                 resetButtons();
                 return;
             }

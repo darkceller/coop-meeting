@@ -37,6 +37,10 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             text-decoration: none;
             border: none;
+            transition: transform 0.2s;
+        }
+        .btn-custom:active {
+            transform: scale(0.98);
         }
         .btn-primary-custom { background-color: #0056b3; color: white; }
         .btn-success-custom { background-color: #28a745; color: white; }
@@ -50,7 +54,6 @@
             margin-top: 30px;
             padding: 20px;
         }
-        /* 針對長輩閱讀：增加行高與段落間距 */
         p { line-height: 1.6; margin-bottom: 1.5rem; }
     </style>
 </head>
@@ -64,17 +67,17 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-<a href="#" id="btn-agenda" class="btn-custom btn-primary-custom">
-    <span class="icon">📅</span> 1. 查看今日議程
-</a>
+                <a href="#" id="btn-agenda" target="_blank" class="btn-custom btn-primary-custom">
+                    <span class="icon">📅</span> 1. 查看今日議程
+                </a>
 
-<a href="#" id="btn-vote" class="btn-custom btn-success-custom">
-    <span class="icon">✍️</span> 2. 點我簽到 / 投票
-</a>
+                <a href="#" id="btn-vote" target="_blank" class="btn-custom btn-success-custom">
+                    <span class="icon">✍️</span> 2. 點我簽到 / 投票
+                </a>
 
-<a href="#" id="btn-archive" class="btn-custom btn-info-custom">
-    <span class="icon">📚</span> 3. 歷次紀錄查詢
-</a>
+                <a href="#" id="btn-archive" target="_blank" class="btn-custom btn-info-custom">
+                    <span class="icon">📚</span> 3. 歷次紀錄查詢
+                </a>
             </div>
         </div>
 
@@ -82,7 +85,7 @@
             <div class="card-body">
                 <h5 class="card-title" style="font-weight: bold; color: var(--coop-green);">💡 小提醒</h5>
                 <p class="card-text">
-                    點擊上方按鈕即可進入相關頁面。若手機字體太小，請點擊螢幕右上角「三個點」選擇「在瀏覽器開啟」。
+                    點擊上方按鈕即可進入相關頁面。若畫面沒有反應，請確認您的網路連線是否正常。
                 </p>
             </div>
         </div>
@@ -94,7 +97,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-    // 1. 貼上你從 Google Sheets 「發布到網路」取得的 CSV 網址
+    // Google Sheets CSV 網址
     const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRjEF6OeIFMUxmbtdQDyJ9Mn-pdPqAgH_MlbFo6mR_qX-jz3Zs0Fmywbnfr0USK0L_YyU7h-k5PxlsX/pub?output=csv";
 
     async function updateLinks() {
@@ -102,35 +105,39 @@
             const response = await fetch(csvUrl);
             const data = await response.text();
             
-            // 2. 解析 CSV (簡單切割法)
-            const rows = data.split('\n').map(row => row.split(','));
+            // 解析 CSV 行
+            const rows = data.split(/\r?\n/).map(row => row.split(','));
             
-            // 3. 取得最後一列非空白資料 (排除 CSV 可能末尾有的換行)
-            const lastRow = rows.filter(row => row[0] && row[0].trim() !== "").pop();
+            // 排除標題列並取得最後一行有效資料
+            const validRows = rows.filter(row => row[0] && row[0].trim() !== "");
+            const lastRow = validRows[validRows.length - 1];
 
             if (lastRow) {
-                // 假設欄位順序：0:日期, 1:議程, 2:投票, 3:檔案
-                const agendaUrl = lastRow[1].trim();
-                const voteUrl = lastRow[2].dist().trim();
-                const archiveUrl = lastRow[3].trim();
+                // 欄位定義：0:日期, 1:議程, 2:投票, 3:檔案
+                const agendaUrl = lastRow[1] ? lastRow[1].trim() : null;
+                const voteUrl = lastRow[2] ? lastRow[2].trim() : null;
+                const archiveUrl = lastRow[3] ? lastRow[3].trim() : null;
 
-                // 4. 自動更新網頁上的按鈕 href
-                // 請確保你的 HTML 按鈕有對應的 ID
-                if (agendaUrl) document.getElementById('btn-agenda').href = agendaUrl;
-                if (voteUrl) document.getElementById('btn-vote').href = voteUrl;
-                if (archiveUrl) document.getElementById('btn-archive').href = archiveUrl;
+                // 更新按鈕連結
+                if (agendaUrl && agendaUrl !== "") {
+                    document.getElementById('btn-agenda').href = agendaUrl;
+                }
+                if (voteUrl && voteUrl !== "") {
+                    document.getElementById('btn-vote').href = voteUrl;
+                }
+                if (archiveUrl && archiveUrl !== "") {
+                    document.getElementById('btn-archive').href = archiveUrl;
+                }
                 
-                console.log("連結更新成功！最新的日期是：" + lastRow[0]);
+                console.log("資料同步成功！最新會議日期：" + lastRow[0]);
             }
         } catch (error) {
-            console.error("抓取資料失敗：", error);
+            console.error("抓取 CSV 失敗，請確認 Google Sheets 是否已發布到網路：", error);
         }
     }
 
-    // 網頁開啟時執行
+    // 執行更新
     updateLinks();
-</script>
+    </script>
 </body>
-
 </html>
-

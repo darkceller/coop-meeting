@@ -62,6 +62,7 @@
             margin-top: 30px;
             padding: 20px;
         }
+        .footer a { color: #555; text-decoration: underline; }
         .form-select-lg {
             border: 2px solid var(--coop-green);
             border-radius: 10px;
@@ -73,7 +74,7 @@
 
     <div class="header">
         <h1 style="font-size: 28px; margin-bottom: 5px;">HCGN-COOP 雲端議事入口</h1>
-        <p style="font-size: 18px; margin-bottom: 0;">🍀 全分社委員會通用版 🍀</p>
+        <p style="font-size: 18px; margin-bottom: 0;">🍀 分社層級委員會通用版 V1.2 🍀</p>
     </div>
 
     <div class="committee-selector-bg">
@@ -111,21 +112,20 @@
     </div>
 
     <div class="footer">
-        <p>HCGN-COOP 數位轉型實驗小組<br>如有使用問題，請於 LINE 群組反應</p>
+        <p>HCGN-COOP 數位轉型實驗小組</p>
+        <p>如有使用問題，請來信 <a href="mailto:dark.celler@gmail.com">dark.celler@gmail.com</a> 反應</p>
     </div>
 
     <script>
-        // --- 設定區：請填入各委員會分頁發布後的 CSV 網址 ---
+        // --- 設定區：請分別填入各分頁「發布到網路」後的獨立 CSV 網址 ---
         const csvUrls = {
-            'editor': 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRjEF6OeIFMUxmbtdQDyJ9Mn-pdPqAgH_MlbFo6mR_qX-jz3Zs0Fmywbnfr0USK0L_YyU7h-k5PxlsX/pub?output=csv', 
-            'education': 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRjEF6OeIFMUxmbtdQDyJ9Mn-pdPqAgH_MlbFo6mR_qX-jz3Zs0Fmywbnfr0USK0L_YyU7h-k5PxlsX/pub?output=csv',
-            'welfare': 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRjEF6OeIFMUxmbtdQDyJ9Mn-pdPqAgH_MlbFo6mR_qX-jz3Zs0Fmywbnfr0USK0L_YyU7h-k5PxlsX/pub?output=csv',
-            'goods': 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRjEF6OeIFMUxmbtdQDyJ9Mn-pdPqAgH_MlbFo6mR_qX-jz3Zs0Fmywbnfr0USK0L_YyU7h-k5PxlsX/pub?output=csv'
+            'editor':    'https://docs.google.com/spreadsheets/d/e/2PACX-1vRjEF6OeIFMUxmbtdQDyJ9Mn-pdPqAgH_MlbFo6mR_qX-jz3Zs0Fmywbnfr0USK0L_YyU7h-k5PxlsX/pub?gid=0&output=csv', 
+            'education': '請填入教育委員會CSV網址',
+            'welfare':   '請填入福祉委員會CSV網址',
+            'goods':     '請填入生活材委員會CSV網址'
         };
 
-        // 頁面載入時
         window.onload = function() {
-            // 讀取上次選擇的紀錄
             const savedCommittee = localStorage.getItem('hcgn_selected_committee');
             if (savedCommittee && csvUrls[savedCommittee]) {
                 document.getElementById('committee-select').value = savedCommittee;
@@ -133,52 +133,48 @@
             updateLinks();
         };
 
-        // 當切換委員會選單時
         async function changeCommittee() {
             const selected = document.getElementById('committee-select').value;
-            localStorage.setItem('hcgn_selected_committee', selected); // 儲存選擇
+            localStorage.setItem('hcgn_selected_committee', selected);
+            
+            document.querySelectorAll('.btn-custom').forEach(btn => btn.style.opacity = '0.5');
             await updateLinks();
+            document.querySelectorAll('.btn-custom').forEach(btn => btn.style.opacity = '1');
         }
 
         async function updateLinks() {
             const committee = document.getElementById('committee-select').value;
             const url = csvUrls[committee];
             
-            // 檢查是否已設定連結
-            if (!url || url.includes('你的')) {
-                console.log(committee + " 尚未設定 CSV 連結");
-                // 連結尚未設定時的重設
-                document.getElementById('btn-agenda').href = "#";
-                document.getElementById('btn-meet').href = "#";
-                document.getElementById('btn-archive').href = "#";
+            if (!url || url.includes('請填入')) {
+                resetButtons();
                 return;
             }
 
             try {
-                const response = await fetch(url);
+                const response = await fetch(url, { cache: "no-store" });
                 const data = await response.text();
                 const rows = data.split(/\r?\n/).map(row => row.split(','));
                 
-                // 過濾掉空行，抓取最後一筆資料
                 const validRows = rows.filter(row => row[0] && row[0].trim() !== "");
                 const lastRow = validRows[validRows.length - 1];
 
                 if (lastRow) {
-                    const agendaUrl = lastRow[1]?.trim();
-                    const meetUrl = lastRow[2]?.trim();
-                    const archiveUrl = lastRow[3]?.trim();
-
-                    document.getElementById('btn-agenda').href = agendaUrl || "#";
-                    document.getElementById('btn-meet').href = meetUrl || "#";
-                    document.getElementById('btn-archive').href = archiveUrl || "#";
-                    
-                    console.log("已切換至：" + committee + "，最新資料日期：" + lastRow[0]);
+                    document.getElementById('btn-agenda').href = lastRow[1]?.trim() || "#";
+                    document.getElementById('btn-meet').href = lastRow[2]?.trim() || "#";
+                    document.getElementById('btn-archive').href = lastRow[3]?.trim() || "#";
                 }
             } catch (error) {
-                console.error("資料更新失敗:", error);
+                console.error("資料抓取失敗:", error);
+                resetButtons();
             }
+        }
+
+        function resetButtons() {
+            document.getElementById('btn-agenda').href = "#";
+            document.getElementById('btn-meet').href = "#";
+            document.getElementById('btn-archive').href = "#";
         }
     </script>
 </body>
 </html>
-

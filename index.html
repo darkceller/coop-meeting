@@ -24,21 +24,34 @@
             margin-bottom: 25px;
             border-bottom: 5px solid var(--coop-orange);
         }
-        .btn-custom {
-            padding: 25px 20px;
-            font-size: 24px; /* 按鈕字體更大 */
-            font-weight: bold;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            text-decoration: none;
-            border: none;
-            transition: transform 0.2s;
-        }
+      .btn-custom {
+        padding: 25px 20px;
+        font-size: 24px;
+        font-weight: bold;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        text-decoration: none;
+        border: none;
+        transition: transform 0.2s;
+    }
+
+    /* 顏色定義 */
+    .btn-primary-custom { background-color: #0056b3; color: white !important; } /* 藍色 */
+    .btn-success-custom { background-color: #28a745; color: white !important; } /* 綠色 */
+    .btn-purple-custom { background-color: #6f42c1; color: white !important; }  /* 紫色 */
+    .btn-info-custom { background-color: #17a2b8; color: white !important; }    /* 青藍色 */
+
+    .btn-custom:hover {
+        opacity: 0.9;
+        color: white !important;
+    }
+    
+    .icon { margin-right: 15px; font-size: 30px; }
         .btn-custom:active {
             transform: scale(0.98);
         }
@@ -67,17 +80,23 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <a href="#" id="btn-agenda" target="_blank" class="btn-custom btn-primary-custom">
-                    <span class="icon">📅</span> 1. 查看今日議程
-                </a>
+<div class="col-12">
+    <a href="#" id="btn-agenda" target="_blank" class="btn-custom btn-primary-custom">
+        <span class="icon">📅</span> 1. 查看今日議程
+    </a>
 
-                <a href="#" id="btn-vote" target="_blank" class="btn-custom btn-success-custom">
-                    <span class="icon">🎥</span> 2. 進入線上會議 (Meet)
-                </a>
+    <a href="https://forms.gle/dKiBD9BbmSLuinjz8" target="_blank" class="btn-custom btn-purple-custom">
+        <span class="icon">📝</span> 2. 提交提案 / 上傳附件
+    </a>
+    
+    <a href="#" id="btn-vote" target="_blank" class="btn-custom btn-success-custom">
+        <span class="icon">🎥</span> 3. 進入線上會議 (Meet)
+    </a>
 
-                <a href="#" id="btn-archive" target="_blank" class="btn-custom btn-info-custom">
-                    <span class="icon">📚</span> 3. 歷次紀錄查詢
-                </a>
+    <a href="#" id="btn-archive" target="_blank" class="btn-custom btn-info-custom">
+        <span class="icon">📚</span> 4. 歷次紀錄查詢
+    </a>
+</div>
             </div>
         </div>
 
@@ -141,4 +160,5 @@
     </script>
 </body>
 </html>
+
 

@@ -74,3 +74,192 @@
             border-bottom-right-radius: 0;
             font-weight: bold;
             font-size: 18px;
+        }
+        .form-select-lg:focus {
+            border-color: var(--coop-green);
+            box-shadow: none;
+        }
+        .btn-confirm {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            font-weight: bold;
+            background-color: var(--coop-orange);
+            border-color: var(--coop-orange);
+            color: white;
+            padding: 0 25px;
+        }
+        .btn-confirm:hover {
+            background-color: #e68a00;
+            color: white;
+        }
+
+        /* 按鈕設計優化 */
+        .btn-custom {
+            padding: 22px 20px;
+            font-size: 22px;
+            font-weight: bold;
+            border-radius: 16px;
+            margin-bottom: 18px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            text-decoration: none !important;
+            border: none;
+            transition: all 0.2s ease;
+        }
+        .btn-custom:active { transform: scale(0.97); }
+        .btn-custom:hover { opacity: 0.9; box-shadow: 0 6px 15px rgba(0,0,0,0.15); }
+        
+        .btn-primary-custom { background-color: #0056b3; color: white !important; }
+        .btn-purple-custom { background-color: #6f42c1; color: white !important; }
+        .btn-success-custom { background-color: #28a745; color: white !important; }
+        .btn-info-custom { background-color: #17a2b8; color: white !important; }
+        
+        .icon { margin-right: 12px; font-size: 28px; }
+
+        /* 精美 Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: #fff;
+            border-top: 1px solid #eee;
+            margin-top: 20px;
+        }
+        .footer-title {
+            color: var(--coop-green);
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        .footer-info {
+            font-size: 14px;
+            color: #888;
+            line-height: 1.6;
+        }
+        .footer a {
+            color: var(--coop-green);
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-section">
+        <div class="container text-center">
+            <img src="https://darkceller.github.io/calendar/logo.png" alt="HCGN-COOP Logo" class="logo-img">
+            <br>
+            <h1>HCGN-COOP 雲端議事入口</h1>
+            <p>🍀 分社層級委員會通用版 V1.2.3 🍀</p>
+        </div>
+    </div>
+
+    <div class="container main-content">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                
+                <div class="content-card">
+                    <label for="committee-select" class="selector-label">請選擇委員會：</label>
+                    <div class="input-group">
+                        <select id="committee-select" class="form-select form-select-lg">
+                            <option value="goods">🛒 生活材委員會</option>
+                            <option value="education">🎓 教育委員會</option>
+                            <option value="editor">🍀 編輯委員會</option>
+                            <option value="welfare">❤️ 福祉委員會</option>
+                        </select>
+                        <button class="btn btn-confirm" type="button" id="confirm-btn" onclick="confirmCommittee()">確認</button>
+                    </div>
+                </div>
+
+                <div class="px-2">
+                    <a href="#" id="btn-agenda" target="_blank" class="btn-custom btn-primary-custom">
+                        <span class="icon">📅</span> 1. 查看今日議程
+                    </a>
+
+                    <a href="https://forms.gle/dKiBD9BbmSLuinjz8" target="_blank" class="btn-custom btn-purple-custom">
+                        <span class="icon">📝</span> 2. 提交提案 / 上傳附件
+                    </a>
+                    
+                    <a href="#" id="btn-meet" target="_blank" class="btn-custom btn-success-custom">
+                        <span class="icon">🎥</span> 3. 進入線上會議 (Meet)
+                    </a>
+
+                    <a href="#" id="btn-archive" target="_blank" class="btn-custom btn-info-custom">
+                        <span class="icon">📚</span> 4. 歷次紀錄查詢
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="footer-title">台灣主婦聯盟生活消費合作社 - 新竹分社</div>
+        <div class="footer-info">
+            HCGN-COOP 數位轉型實驗小組 維護製作<br>
+            如有使用問題，請來信 <a href="mailto:dark.celler@gmail.com">dark.celler@gmail.com</a> 反應
+        </div>
+    </div>
+
+    <script>
+        const csvUrls = {
+            'goods':     'https://docs.google.com/spreadsheets/d/e/2PACX-1vRjEF6OeIFMUxmbtdQDyJ9Mn-pdPqAgH_MlbFo6mR_qX-jz3Zs0Fmywbnfr0USK0L_YyU7h-k5PxlsX/pub?gid=1946325910&single=true&output=csv',
+            'education': 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRjEF6OeIFMUxmbtdQDyJ9Mn-pdPqAgH_MlbFo6mR_qX-jz3Zs0Fmywbnfr0USK0L_YyU7h-k5PxlsX/pub?gid=1218334275&single=true&output=csv',
+            'editor':    'https://docs.google.com/spreadsheets/d/e/2PACX-1vRjEF6OeIFMUxmbtdQDyJ9Mn-pdPqAgH_MlbFo6mR_qX-jz3Zs0Fmywbnfr0USK0L_YyU7h-k5PxlsX/pub?gid=0&single=true&output=csv', 
+            'welfare':   'https://docs.google.com/spreadsheets/d/e/2PACX-1vRjEF6OeIFMUxmbtdQDyJ9Mn-pdPqAgH_MlbFo6mR_qX-jz3Zs0Fmywbnfr0USK0L_YyU7h-k5PxlsX/pub?gid=1888287492&single=true&output=csv'
+        };
+
+        window.onload = function() {
+            const savedCommittee = localStorage.getItem('hcgn_selected_committee');
+            if (savedCommittee && csvUrls[savedCommittee]) {
+                document.getElementById('committee-select').value = savedCommittee;
+            }
+            updateLinks();
+        };
+
+        async function confirmCommittee() {
+            const confirmBtn = document.getElementById('confirm-btn');
+            const selected = document.getElementById('committee-select').value;
+            localStorage.setItem('hcgn_selected_committee', selected);
+            
+            confirmBtn.disabled = true;
+            confirmBtn.innerText = "讀取中";
+            document.querySelectorAll('.btn-custom').forEach(btn => btn.style.opacity = '0.5');
+
+            await updateLinks();
+
+            confirmBtn.innerText = "已更新";
+            document.querySelectorAll('.btn-custom').forEach(btn => btn.style.opacity = '1');
+            
+            setTimeout(() => {
+                confirmBtn.disabled = false;
+                confirmBtn.innerText = "確認";
+            }, 1000);
+        }
+
+        async function updateLinks() {
+            const committee = document.getElementById('committee-select').value;
+            const url = csvUrls[committee];
+            if (!url) return;
+
+            try {
+                const response = await fetch(url, { cache: "no-store" });
+                const data = await response.text();
+                const rows = data.split(/\r?\n/).map(row => row.split(','));
+                const validRows = rows.filter(row => row[0] && row[0].trim() !== "");
+                const lastRow = validRows[validRows.length - 1];
+
+                if (lastRow) {
+                    document.getElementById('btn-agenda').href = lastRow[1]?.trim() || "#";
+                    document.getElementById('btn-meet').href = lastRow[2]?.trim() || "#";
+                    document.getElementById('btn-archive').href = lastRow[3]?.trim() || "#";
+                }
+            } catch (error) {
+                console.error("更新失敗", error);
+            }
+        }
+    </script>
+</body>
+</html>

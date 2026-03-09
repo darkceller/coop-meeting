@@ -26,12 +26,16 @@
             text-align: center;
             border-bottom: 6px solid var(--coop-orange);
         }
+        
+        /* 修正：將 Logo 寬度設為 100%，並透過 max-width 控制最大寬度與按鈕卡片一致 */
         .logo-img {
-            width: 350px; 
-            max-width: 90%; 
+            width: 100%; 
+            max-width: 750px; /* 大約等於 Bootstrap col-lg-8 的寬度 */
             height: auto;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
+            display: inline-block;
         }
+
         .header-section h1 {
             font-size: 28px;
             font-weight: 800;
@@ -75,6 +79,7 @@
             border-radius: 10px;
             width: 100%;
             margin-top: 15px;
+            transition: all 0.3s;
         }
         .btn-confirm:hover { background-color: #e68a00; color: white; }
 
@@ -122,7 +127,7 @@
         <div class="container text-center">
             <img src="logo_v2.png" alt="HCGN-COOP Logo" class="logo-img">
             <h1>HCGN-COOP 雲端議事系統</h1>
-            <p>🍀 分社層級委員會通用版 V1.2.4 🍀</p>
+            <p>🍀 分社層級委員會通用版 V1.2.5 🍀</p>
         </div>
     </div>
 
@@ -133,18 +138,21 @@
                 <div class="content-card">
                     <div class="mb-3">
                         <label for="committee-select" class="selector-label">1. 選擇所屬單位：</label>
-                        <select id="committee-select" class="form-select form-select-lg">
+                        <select id="committee-select" class="form-select form-select-lg" onchange="autoUpdateIfUnlocked()">
                             <option value="goods">🛒 生活材委員會</option>
                             <option value="education">🎓 教育委員會</option>
                             <option value="editor">🍀 編輯委員會</option>
                             <option value="welfare">❤️ 福祉委員會</option>
                         </select>
                     </div>
-                    <div class="mb-2">
-                        <label for="pass-code" class="selector-label">2. 輸入通行碼：</label>
-                        <input type="password" id="pass-code" class="form-control form-control-lg form-control-custom" placeholder="請輸入分社通行碼">
+                    
+                    <div id="password-block">
+                        <div class="mb-2">
+                            <label for="pass-code" class="selector-label">2. 輸入通行碼：</label>
+                            <input type="password" id="pass-code" class="form-control form-control-lg form-control-custom" placeholder="請輸入分社通行碼">
+                        </div>
+                        <button class="btn btn-confirm" type="button" id="confirm-btn" onclick="verifyAndLoad()">驗證並進入系統</button>
                     </div>
-                    <button class="btn btn-confirm" type="button" id="confirm-btn" onclick="verifyAndLoad()">驗證並進入系統</button>
                 </div>
 
                 <div id="function-area" class="px-2">
@@ -160,6 +168,7 @@
                     <a href="#" id="btn-archive" target="_blank" class="btn-custom btn-info-custom">
                         <span class="icon">📚</span> 4. 歷次紀錄查詢
                     </a>
+                    <p class="text-center mt-3 text-muted" style="font-size: 0.9rem;">提示：切換上方單位，下方連結將自動同步更新</p>
                 </div>
 
             </div>
@@ -183,28 +192,37 @@
             'welfare':   'https://docs.google.com/spreadsheets/d/e/2PACX-1vRjEF6OeIFMUxmbtdQDyJ9Mn-pdPqAgH_MlbFo6mR_qX-jz3Zs0Fmywbnfr0USK0L_YyU7h-k5PxlsX/pub?gid=1888287492&single=true&output=csv'
         };
 
+        let isUnlocked = false;
+
         async function verifyAndLoad() {
             const inputCode = document.getElementById('pass-code').value;
             const confirmBtn = document.getElementById('confirm-btn');
             const funcArea = document.getElementById('function-area');
+            const passBlock = document.getElementById('password-block');
 
             if (inputCode === CORRECT_CODE) {
-                confirmBtn.innerText = "驗證成功，載入中...";
-                confirmBtn.style.backgroundColor = "#28a745";
-                confirmBtn.style.borderColor = "#28a745";
+                isUnlocked = true;
+                confirmBtn.innerText = "驗證成功...";
                 
                 await updateLinks();
                 
+                // 隱藏密碼區，顯示按鈕區
+                passBlock.style.display = "none";
                 funcArea.style.display = "block";
                 setTimeout(() => { funcArea.style.opacity = "1"; }, 10);
-                
-                confirmBtn.innerText = "已解鎖 ✅";
-                confirmBtn.disabled = true;
-                document.getElementById('pass-code').disabled = true;
-                document.getElementById('committee-select').disabled = true;
             } else {
                 alert("通行碼錯誤，請重新輸入！");
                 document.getElementById('pass-code').value = "";
+            }
+        }
+
+        // 新增：切換選單時的自動更新邏輯
+        async function autoUpdateIfUnlocked() {
+            if (isUnlocked) {
+                const funcArea = document.getElementById('function-area');
+                funcArea.style.opacity = "0.5"; // 給予一個更新中的視覺感
+                await updateLinks();
+                funcArea.style.opacity = "1";
             }
         }
 
@@ -227,4 +245,3 @@
     </script>
 </body>
 </html>
-

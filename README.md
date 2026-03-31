@@ -1,17 +1,13 @@
-收到！我已經將狀態改回 `Active_Testing`，並把這三行標章的專屬意義直接完美地融入到整份 `README.md` 的最前面，讓接手或觀看這份文件的人能第一時間掌握系統的現況與架構價值。
-
-以下是完整的更新版：
-
------
-
 # 📅 HCGN-COOP 雲端議事系統
 
+![Version](https://img.shields.io/badge/Version-1.2.5-blue.svg)
+![Status](https://img.shields.io/badge/Status-Active_Testing-success.svg)
+![Platform](https://img.shields.io/badge/Platform-GitHub_Pages-lightgrey.svg)
+
 ### 🏷️ 系統狀態標章說明
-
-  * **`Version 1.2.5` (版本號)**：系統經歷初期的靜態網頁（V1.0）、串接 Google Sheets（V1.1）、整合四大委員會（V1.2），進化至目前具備「通行碼防護」與「強制清除快取（防抓舊連結）」的成熟階段。
-  * **`Status Active_Testing` (運行狀態)**：目前專案處於**活躍且持續測試中**的階段。核心的密碼驗證與動態抓取邏輯已建置完成，目前正與行政夥伴及委員進行實機操作與流程測試，確保在不同裝置與情境下的系統穩定度。
-  * **`Platform GitHub Pages` (部署平台)**：系統架設於 GitHub 提供的免費靜態網頁空間，完美呼應本專案「無頭式資料庫」的特色。前端完全依賴靜態網頁，後端資料全靠 Google Sheets 支撐，達成**零維護成本、零伺服器費用**的極輕量架構。
-
+* **`Version 1.2.5` (版本號)**：系統經歷初期的靜態網頁（V1.0）、串接 Google Sheets（V1.1）、整合四大委員會（V1.2），進化至目前具備「通行碼防護」與「強制清除快取（防抓舊連結）」的成熟階段。
+* **`Status Active_Testing` (運行狀態)**：目前專案處於**活躍且持續測試中**的階段。核心的密碼驗證與動態抓取邏輯已建置完成，目前正與行政夥伴及委員進行實機操作與流程測試，確保在不同裝置與情境下的系統穩定度。
+* **`Platform GitHub Pages` (部署平台)**：系統架設於 GitHub 提供的免費靜態網頁空間，完美呼應本專案「無頭式資料庫」的特色。前端完全依賴靜態網頁，後端資料全靠 Google Sheets 支撐，達成**零維護成本、零伺服器費用**的極輕量架構。
 -----
 
 ## 📖 專案概述 (Project Overview)
